@@ -1,0 +1,2954 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 时代为什么要重视 HTML</title>
+  <style>
+    :root {
+      --cyan: #00b0f0;
+      --blue: #4f81bd;
+      --red: #c0504d;
+      --green: #9bbb59;
+      --violet: #8064a2;
+      --ink: #050505;
+      --muted: #333333;
+      --soft: #eeeeee;
+      --line: #bfbfbf;
+      --pale: #f7fbfd;
+      --slide-w: min(1180px, 94vw);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+      background: #fff;
+    }
+
+    body {
+      overflow-x: hidden;
+      color: var(--ink);
+      background: #fff;
+      font-family: "Times New Roman", "KaiTi", "楷体", serif;
+    }
+
+    .progress {
+      position: fixed;
+      inset: 0 auto auto 0;
+      width: var(--progress, 0%);
+      height: clamp(4px, 0.65vh, 6px);
+      background: var(--cyan);
+      z-index: 20;
+      transition: width 180ms ease;
+    }
+
+    .hint {
+      position: fixed;
+      right: clamp(14px, 1.7vw, 24px);
+      top: clamp(12px, 1.6vh, 18px);
+      z-index: 20;
+      padding: clamp(4px, 0.8vh, 7px) clamp(8px, 1vw, 12px);
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.88);
+      color: #666;
+      font-size: clamp(10px, 0.9vw, 12px);
+    }
+
+    .slide {
+      position: relative;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      scroll-snap-align: start;
+      padding: clamp(26px, 3.8vh, 42px) clamp(34px, 4.6vw, 76px);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: clamp(12px, 2vh, 22px);
+      background: #fff;
+      border-bottom: 1px solid #d4d4d4;
+    }
+
+    .frame {
+      width: var(--slide-w);
+      justify-self: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      display: grid;
+      grid-template-columns: minmax(230px, 2.45fr) minmax(0, 6.3fr);
+      align-items: center;
+      gap: clamp(18px, 3vw, 42px);
+      min-height: clamp(52px, 7vh, 72px);
+      padding-top: clamp(2px, 0.6vh, 8px);
+    }
+
+    .title-box {
+      border-left: clamp(7px, 0.8vw, 10px) solid var(--cyan);
+      padding-left: clamp(10px, 1.2vw, 16px);
+      min-width: 0;
+      background: #fff;
+    }
+
+    .title-box .eyebrow {
+      color: var(--cyan);
+      font-size: clamp(10px, 0.9vw, 13px);
+      line-height: 1.15;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .title-box h1,
+    .title-box h2 {
+      margin-top: clamp(3px, 0.5vh, 6px);
+      font-size: clamp(18px, 2vw, 30px);
+      line-height: 1.08;
+      font-weight: 700;
+      white-space: normal;
+    }
+
+    .explain {
+      min-height: clamp(34px, 4.8vh, 48px);
+      padding: clamp(7px, 1.1vh, 11px) clamp(12px, 1.7vw, 20px);
+      border-left: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      color: #111;
+      font-size: clamp(14px, 1.35vw, 20px);
+      line-height: 1.35;
+      background: #fff;
+    }
+
+    .content {
+      align-self: center;
+      width: var(--slide-w);
+      justify-self: center;
+      position: relative;
+      z-index: 1;
+      max-height: min(73vh, 620px);
+    }
+
+    .footer {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: end;
+      gap: clamp(16px, 2vw, 28px);
+      width: var(--slide-w);
+      justify-self: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .module-tag {
+      min-width: clamp(150px, 16vw, 220px);
+      padding: clamp(8px, 1.1vh, 12px) clamp(12px, 1.5vw, 18px);
+      background: var(--cyan);
+      color: #fff;
+      font-size: clamp(13px, 1.2vw, 17px);
+      line-height: 1.18;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .footer-rule {
+      height: 1px;
+      background: var(--line);
+      transform: translateY(calc(-1 * clamp(8px, 1.2vh, 12px)));
+    }
+
+    .brand {
+      font-size: clamp(21px, 2.3vw, 36px);
+      line-height: 1;
+      color: #000;
+      white-space: nowrap;
+    }
+
+    .brand span {
+      color: var(--cyan);
+    }
+
+    .page {
+      position: absolute;
+      left: 0;
+      bottom: calc(100% + clamp(3px, 0.5vh, 6px));
+      color: #777;
+      font-size: clamp(11px, 1vw, 14px);
+    }
+
+    .cover {
+      grid-template-rows: 1fr auto;
+    }
+
+    .cover .content {
+      display: grid;
+      place-items: center;
+      text-align: center;
+      max-height: none;
+    }
+
+    .cover-title {
+      max-width: min(980px, 86vw);
+    }
+
+    .cover-title h1 {
+      font-size: clamp(38px, 5.8vw, 74px);
+      line-height: 1.04;
+      font-weight: 700;
+    }
+
+    .cover-title::before {
+      content: "";
+      display: block;
+      width: clamp(88px, 9vw, 140px);
+      height: clamp(7px, 1vh, 10px);
+      margin: 0 auto clamp(22px, 3.4vh, 38px);
+      background: var(--cyan);
+    }
+
+    .cover-title p {
+      margin-top: clamp(20px, 3vh, 34px);
+      font-size: clamp(18px, 2vw, 27px);
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .core-claim {
+      margin: clamp(24px, 4vh, 42px) auto 0;
+      max-width: min(920px, 82vw);
+      padding: clamp(12px, 1.7vh, 18px) clamp(18px, 2.4vw, 30px);
+      background: var(--cyan);
+      color: #fff;
+      font-size: clamp(18px, 2vw, 28px);
+      line-height: 1.32;
+      font-weight: 700;
+    }
+
+    .cover .core-claim {
+      max-width: min(980px, 84vw);
+      font-size: clamp(20px, 2.4vw, 32px);
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: clamp(24px, 4vw, 54px);
+      align-items: center;
+    }
+
+    .lead-block {
+      display: grid;
+      gap: clamp(12px, 1.8vh, 20px);
+    }
+
+    p {
+      color: var(--muted);
+      font-size: clamp(15px, 1.35vw, 19px);
+      line-height: 1.52;
+    }
+
+    strong {
+      color: #000;
+      font-weight: 700;
+    }
+
+    .browser {
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .browser-top {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: clamp(8px, 1vw, 12px);
+      align-items: center;
+      padding: clamp(8px, 1vh, 12px);
+      border-bottom: 1px solid var(--line);
+      background: #f2f2f2;
+    }
+
+    .dots {
+      display: flex;
+      gap: clamp(5px, 0.6vw, 8px);
+    }
+
+    .dot {
+      width: clamp(8px, 0.9vw, 10px);
+      height: clamp(8px, 0.9vw, 10px);
+      border-radius: 50%;
+      background: var(--cyan);
+    }
+
+    .address {
+      height: clamp(14px, 1.6vh, 18px);
+      border: 1px solid #d5d5d5;
+      background: #fff;
+    }
+
+    .browser-body {
+      padding: clamp(18px, 2.7vh, 32px);
+      display: grid;
+      gap: clamp(16px, 2vh, 24px);
+    }
+
+    .mini-nav {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(8px, 1vw, 12px);
+      border-bottom: 1px solid #000;
+      padding-bottom: clamp(8px, 1vh, 12px);
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .mock-hero {
+      display: grid;
+      grid-template-columns: 1.45fr 0.7fr;
+      gap: clamp(14px, 1.8vw, 22px);
+      align-items: end;
+    }
+
+    .mock-title {
+      font-size: clamp(26px, 3vw, 42px);
+      line-height: 1.05;
+      font-weight: 700;
+    }
+
+    .mock-card {
+      height: clamp(86px, 19vh, 150px);
+      border: 1px solid var(--line);
+      background: var(--pale);
+    }
+
+    .scope-map {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(18px, 2.8vw, 36px);
+      align-items: stretch;
+    }
+
+    .scope-card {
+      border: 1px solid var(--line);
+      border-top: clamp(6px, 0.8vh, 8px) solid var(--cyan);
+      padding: clamp(18px, 2.4vh, 28px);
+      display: grid;
+      gap: clamp(10px, 1.5vh, 16px);
+    }
+
+    .scope-card h3 {
+      font-size: clamp(23px, 2.2vw, 34px);
+    }
+
+    .scope-card ul {
+      display: grid;
+      gap: clamp(8px, 1vh, 12px);
+    }
+
+    .scope-card li {
+      font-size: clamp(14px, 1.25vw, 18px);
+      line-height: 1.42;
+    }
+
+    .code-demo {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: clamp(18px, 3vw, 38px);
+      align-items: stretch;
+    }
+
+    .interactive-page {
+      border: 1px solid var(--line);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: clamp(300px, 48vh, 420px);
+      background: #fff;
+    }
+
+    .interactive-page header {
+      padding: clamp(12px, 1.6vh, 18px);
+      border-bottom: 1px solid var(--line);
+      background: var(--pale);
+    }
+
+    .interactive-page h3 {
+      font-size: clamp(20px, 1.8vw, 28px);
+    }
+
+    .interactive-page main {
+      display: grid;
+      place-items: center;
+      padding: clamp(18px, 2.4vh, 28px);
+      text-align: center;
+    }
+
+    .demo-value {
+      font-size: clamp(42px, 6vw, 76px);
+      color: var(--cyan);
+      line-height: 1;
+      font-weight: 700;
+    }
+
+    .demo-caption {
+      margin-top: clamp(8px, 1vh, 12px);
+      color: var(--muted);
+      font-size: clamp(14px, 1.2vw, 17px);
+    }
+
+    .demo-controls {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      border-top: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .demo-controls button {
+      border: 0;
+      background: #fff;
+      padding: clamp(10px, 1.4vh, 15px);
+      color: #000;
+      font-family: "Times New Roman", "KaiTi", "楷体", serif;
+      font-size: clamp(13px, 1.1vw, 16px);
+      cursor: pointer;
+    }
+
+    .demo-controls button:hover,
+    .demo-controls button.active {
+      background: var(--cyan);
+      color: #fff;
+    }
+
+    .codepen-link {
+      display: inline-flex;
+      margin-top: clamp(10px, 1.5vh, 16px);
+      color: var(--cyan);
+      font-size: clamp(13px, 1.1vw, 15px);
+      font-weight: 700;
+      text-decoration: none;
+      border-bottom: 1px solid currentColor;
+    }
+
+    .layer-source {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: clamp(300px, 48vh, 420px);
+      height: clamp(300px, 48vh, 420px);
+      border: 1px solid var(--line);
+      background: #fff;
+      min-width: 0;
+    }
+
+    .layer-source header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: clamp(10px, 1.4vw, 16px);
+      padding: clamp(10px, 1.4vh, 16px);
+      border-bottom: 1px solid var(--line);
+      background: var(--pale);
+    }
+
+    .layer-source-title {
+      display: grid;
+      gap: 2px;
+    }
+
+    .layer-source-title h3 {
+      font-size: clamp(17px, 1.5vw, 23px);
+      line-height: 1.15;
+    }
+
+    .copy-code-btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #000;
+      padding: clamp(7px, 1vh, 10px) clamp(10px, 1.3vw, 14px);
+      font-family: "Times New Roman", "KaiTi", "楷体", serif;
+      font-size: clamp(12px, 1vw, 14px);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .copy-code-btn:hover {
+      background: var(--cyan);
+      color: #fff;
+    }
+
+    .layer-code-panel {
+      margin: 0;
+      padding: clamp(12px, 1.8vh, 18px);
+      min-height: 0;
+      overflow: auto;
+      background: #0f1720;
+      color: #dbeafe;
+      font-family: Consolas, "Cascadia Code", monospace;
+      font-size: clamp(10px, 0.86vw, 12px);
+      line-height: 1.45;
+      white-space: pre;
+    }
+
+    .annotated-code {
+      display: grid;
+      grid-template-columns: 1fr minmax(210px, 0.62fr);
+      gap: clamp(16px, 2.4vw, 30px);
+      align-items: stretch;
+    }
+
+    .structure-panel {
+      display: grid;
+      grid-template-rows: minmax(0, 0.92fr) minmax(0, 1.08fr);
+      gap: clamp(12px, 1.6vh, 18px);
+      min-height: 0;
+    }
+
+    .structure-panel .code-panel {
+      max-height: none;
+      font-size: clamp(10px, 0.86vw, 12px);
+      line-height: 1.42;
+      padding: clamp(12px, 1.6vh, 16px);
+    }
+
+    .dom-tree-card {
+      border: 1px solid var(--line);
+      border-left: clamp(6px, 0.8vw, 9px) solid var(--cyan);
+      background: #fff;
+      padding: clamp(12px, 1.6vh, 16px);
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: clamp(8px, 1vh, 12px);
+      min-height: 0;
+    }
+
+    .dom-tree-card h3 {
+      font-size: clamp(15px, 1.2vw, 18px);
+      line-height: 1.2;
+    }
+
+    .dom-tree {
+      margin: 0;
+      color: #1f2a2e;
+      font-family: Consolas, "Cascadia Code", monospace;
+      font-size: clamp(10px, 0.86vw, 12px);
+      line-height: 1.42;
+      white-space: pre;
+      overflow: hidden;
+    }
+
+    .dom-node {
+      color: var(--cyan);
+      font-weight: 800;
+    }
+
+    .dom-class {
+      color: #7a4d00;
+      font-weight: 700;
+    }
+
+    .note-stack {
+      display: grid;
+      gap: clamp(10px, 1.4vh, 16px);
+      align-content: center;
+    }
+
+    .callout {
+      border-left: clamp(5px, 0.7vw, 7px) solid var(--cyan);
+      padding: clamp(10px, 1.4vh, 14px) clamp(12px, 1.6vw, 18px);
+      background: var(--pale);
+      color: var(--muted);
+      font-size: clamp(13px, 1.1vw, 16px);
+      line-height: 1.42;
+    }
+
+    .xml-note {
+      margin-top: clamp(16px, 2.4vh, 26px);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(12px, 1.8vw, 20px);
+    }
+
+    .token-scale {
+      display: grid;
+      gap: clamp(13px, 1.9vh, 20px);
+    }
+
+    .token-scale .bar-row {
+      grid-template-columns: minmax(105px, 145px) 1fr minmax(96px, 130px);
+    }
+
+    .token-footnote {
+      margin-top: clamp(12px, 1.8vh, 20px);
+      color: #555;
+      font-size: clamp(12px, 1vw, 14px);
+      line-height: 1.42;
+    }
+
+    .wide-flow {
+      gap: clamp(10px, 1.4vw, 18px);
+    }
+
+    .wide-flow .step {
+      min-height: clamp(150px, 24vh, 210px);
+      padding: clamp(18px, 2.6vh, 28px);
+    }
+
+    .wide-flow .step strong {
+      font-size: clamp(18px, 1.65vw, 24px);
+    }
+
+    .wide-flow .step small {
+      font-size: clamp(14px, 1.18vw, 17px);
+    }
+
+    .workflow-combined {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: clamp(14px, 1.8vh, 22px);
+      align-content: stretch;
+    }
+
+    .workflow-combined .wide-flow .step {
+      min-height: clamp(86px, 13vh, 118px);
+      padding: clamp(10px, 1.4vh, 15px);
+    }
+
+    .workflow-combined .wide-flow .step strong {
+      font-size: clamp(14px, 1.2vw, 17px);
+    }
+
+    .workflow-combined .wide-flow .step small {
+      font-size: clamp(11px, 0.95vw, 13px);
+      line-height: 1.3;
+    }
+
+    .workflow-detail {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: clamp(14px, 2vw, 24px);
+      min-height: 0;
+    }
+
+    .code-pair {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: clamp(10px, 1.4vw, 16px);
+      min-width: 0;
+    }
+
+    .code-pair .code-panel {
+      padding: clamp(12px, 1.6vh, 17px);
+      font-size: clamp(11px, 0.92vw, 13px);
+      line-height: 1.38;
+      max-height: none;
+    }
+
+    .enhance-stack {
+      display: grid;
+      gap: clamp(9px, 1.1vh, 13px);
+      align-content: stretch;
+    }
+
+    .enhance-stack .node {
+      min-height: 0;
+      padding: clamp(10px, 1.35vh, 14px);
+    }
+
+    .enhance-stack .node h3 {
+      font-size: clamp(15px, 1.2vw, 18px);
+    }
+
+    .enhance-stack .node p {
+      font-size: clamp(11px, 0.95vw, 13px);
+      line-height: 1.35;
+    }
+
+    .pandoc-page {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: clamp(14px, 2vw, 24px);
+      align-items: stretch;
+    }
+
+    .conversion-panel {
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: clamp(14px, 1.8vh, 20px);
+    }
+
+    .mini-flow {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(10px, 1.3vw, 16px);
+      align-items: stretch;
+    }
+
+    .mini-flow .step {
+      min-height: clamp(96px, 15vh, 128px);
+      padding: clamp(12px, 1.7vh, 17px);
+    }
+
+    .mini-flow .step strong {
+      font-size: clamp(15px, 1.25vw, 18px);
+    }
+
+    .mini-flow .step small {
+      font-size: clamp(11px, 0.95vw, 13px);
+    }
+
+    .command-block {
+      display: grid;
+      gap: clamp(10px, 1.3vh, 14px);
+    }
+
+    .command-block .code-panel {
+      max-height: none;
+      padding: clamp(12px, 1.6vh, 17px);
+      font-family: var(--mono);
+      font-size: clamp(10px, 0.86vw, 12px);
+      line-height: 1.42;
+    }
+
+    .resource-panel {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: clamp(10px, 1.4vh, 16px);
+      min-width: 0;
+    }
+
+    .pandoc-link {
+      border: 1px solid var(--line);
+      border-left: clamp(6px, 0.8vw, 9px) solid var(--cyan);
+      padding: clamp(14px, 1.9vh, 20px);
+      color: #000;
+      text-decoration: none;
+      background: var(--pale);
+      display: grid;
+      gap: 6px;
+    }
+
+    .pandoc-link span {
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: clamp(11px, 0.9vw, 13px);
+      font-weight: 700;
+    }
+
+    .file-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(10px, 1.4vw, 16px);
+      align-items: stretch;
+      min-width: 0;
+    }
+
+    .file-card {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #000;
+      text-decoration: none;
+      padding: clamp(10px, 1.35vh, 14px);
+      min-height: clamp(112px, 16vh, 145px);
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: clamp(5px, 0.7vh, 8px);
+      min-width: 0;
+    }
+
+    .file-icon {
+      width: clamp(42px, 4.2vw, 58px);
+      aspect-ratio: 0.78;
+      border: 2px solid var(--cyan);
+      border-radius: 4px;
+      position: relative;
+      display: grid;
+      place-items: center;
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: clamp(10px, 0.9vw, 12px);
+      font-weight: 800;
+    }
+
+    .file-icon::after {
+      content: "";
+      position: absolute;
+      right: -2px;
+      top: -2px;
+      width: 14px;
+      height: 14px;
+      border-left: 2px solid var(--cyan);
+      border-bottom: 2px solid var(--cyan);
+      background: #fff;
+    }
+
+    .file-card h3 {
+      font-size: clamp(12px, 1vw, 15px);
+      line-height: 1.18;
+      overflow-wrap: anywhere;
+    }
+
+    .file-card p {
+      color: var(--muted);
+      font-size: clamp(10px, 0.85vw, 12px);
+      line-height: 1.35;
+    }
+
+    .output-strategy {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: clamp(16px, 2.2vw, 28px);
+      align-items: stretch;
+    }
+
+    .strategy-card {
+      border: 1px solid var(--line);
+      border-top: clamp(5px, 0.7vh, 7px) solid var(--cyan);
+      background: #fff;
+      padding: clamp(15px, 2vh, 22px);
+      display: grid;
+      gap: clamp(10px, 1.4vh, 16px);
+      min-width: 0;
+    }
+
+    .strategy-card .no {
+      color: var(--cyan);
+      font-size: clamp(13px, 1vw, 15px);
+      font-weight: 700;
+    }
+
+    .strategy-card h3 {
+      font-size: clamp(18px, 1.5vw, 22px);
+      line-height: 1.18;
+    }
+
+    .strategy-card p,
+    .strategy-card li {
+      color: var(--muted);
+      font-size: clamp(11px, 0.95vw, 14px);
+      line-height: 1.38;
+    }
+
+    .repo-list {
+      display: grid;
+      gap: clamp(8px, 1vh, 12px);
+    }
+
+    .repo-link {
+      display: grid;
+      gap: 3px;
+      border: 1px solid var(--line);
+      background: var(--pale);
+      color: #000;
+      text-decoration: none;
+      padding: clamp(9px, 1.1vh, 12px);
+      min-width: 0;
+    }
+
+    .repo-link span {
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: clamp(10px, 0.82vw, 12px);
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .subpath-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(10px, 1.4vw, 16px);
+    }
+
+    .subpath {
+      border-left: clamp(5px, 0.7vw, 7px) solid var(--cyan);
+      background: var(--pale);
+      padding: clamp(11px, 1.5vh, 15px);
+      display: grid;
+      gap: clamp(6px, 0.8vh, 9px);
+      min-width: 0;
+    }
+
+    .subpath h4 {
+      font-size: clamp(15px, 1.2vw, 18px);
+      line-height: 1.2;
+    }
+
+    .subpath .tag {
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: clamp(10px, 0.8vw, 12px);
+      font-weight: 700;
+    }
+
+    .behavior-demo {
+      display: grid;
+      grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+      gap: clamp(16px, 2.2vw, 28px);
+      align-items: stretch;
+    }
+
+    .agri-widget {
+      border: 1px solid var(--line);
+      background: #fff;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .agri-widget-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      padding: clamp(12px, 1.6vh, 18px);
+      border-bottom: 1px solid var(--line);
+      background: var(--pale);
+    }
+
+    .agri-widget-head h3 {
+      font-size: clamp(16px, 1.35vw, 20px);
+      line-height: 1.18;
+    }
+
+    .agri-widget-head p {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: clamp(10px, 0.9vw, 12px);
+    }
+
+    .agri-year {
+      min-width: 86px;
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: clamp(24px, 2.5vw, 36px);
+      font-weight: 800;
+      text-align: right;
+    }
+
+    .agri-map-frame {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      padding: clamp(10px, 1.3vh, 14px);
+      background: #f9faf7;
+    }
+
+    .agri-map-frame img {
+      display: block;
+      max-width: 100%;
+      max-height: clamp(220px, 35vh, 310px);
+      object-fit: contain;
+      border: 1px solid var(--line);
+      background: #fff;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+
+    .agri-map-frame img.is-changing {
+      opacity: 0.55;
+      transform: scale(0.985);
+    }
+
+    .agri-controls {
+      display: grid;
+      gap: clamp(8px, 1vh, 12px);
+      padding: clamp(10px, 1.4vh, 16px);
+      border-top: 1px solid var(--line);
+    }
+
+    .agri-control-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: clamp(10px, 1.4vw, 16px);
+      align-items: center;
+    }
+
+    .agri-control-row button {
+      width: clamp(32px, 3vw, 40px);
+      aspect-ratio: 1;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--cyan);
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .agri-control-row input {
+      width: 100%;
+      accent-color: var(--cyan);
+    }
+
+    .agri-status {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: clamp(10px, 0.82vw, 12px);
+      min-width: 0;
+    }
+
+    .agri-status span:first-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .behavior-notes {
+      display: grid;
+      gap: clamp(10px, 1.3vh, 14px);
+      align-content: stretch;
+    }
+
+    .behavior-notes .node {
+      min-height: 0;
+      padding: clamp(11px, 1.5vh, 15px);
+    }
+
+    .behavior-notes .node h3 {
+      font-size: clamp(15px, 1.2vw, 18px);
+    }
+
+    .behavior-notes .node p {
+      font-size: clamp(11px, 0.92vw, 13px);
+      line-height: 1.34;
+    }
+
+    .final-product {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: clamp(16px, 2.2vw, 28px);
+      align-items: stretch;
+    }
+
+    .vibe-flow {
+      display: grid;
+      gap: clamp(10px, 1.3vh, 14px);
+      align-content: stretch;
+    }
+
+    .vibe-step {
+      border-left: clamp(5px, 0.7vw, 7px) solid var(--cyan);
+      background: #fff;
+      border-top: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: clamp(11px, 1.5vh, 15px);
+      display: grid;
+      gap: 5px;
+    }
+
+    .vibe-step strong {
+      font-size: clamp(15px, 1.2vw, 18px);
+      line-height: 1.2;
+    }
+
+    .vibe-step small {
+      color: var(--muted);
+      font-size: clamp(11px, 0.9vw, 13px);
+      line-height: 1.35;
+    }
+
+    .web-preview {
+      border: 1px solid var(--line);
+      background: #fff;
+      display: grid;
+      grid-template-columns: minmax(175px, 0.42fr) 1fr;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .web-panel {
+      border-right: 1px solid var(--line);
+      background: var(--pale);
+      padding: clamp(12px, 1.5vh, 16px);
+      display: grid;
+      grid-template-rows: auto auto auto 1fr;
+      gap: clamp(8px, 1vh, 12px);
+      min-width: 0;
+    }
+
+    .web-panel .eyebrow {
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: clamp(10px, 0.8vw, 12px);
+      font-weight: 800;
+    }
+
+    .web-panel h3 {
+      font-size: clamp(16px, 1.3vw, 20px);
+      line-height: 1.18;
+    }
+
+    .mock-search {
+      height: 34px;
+      border: 1px solid var(--line);
+      background: #fff;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      color: var(--muted);
+      font-size: clamp(10px, 0.85vw, 12px);
+    }
+
+    .mock-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .mock-chip {
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 5px 7px;
+      color: #333;
+      font-size: clamp(10px, 0.78vw, 11px);
+    }
+
+    .mock-chip.active {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .mock-list {
+      display: grid;
+      gap: 7px;
+      align-content: start;
+      min-width: 0;
+    }
+
+    .mock-row {
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 8px;
+      min-width: 0;
+    }
+
+    .mock-row strong {
+      display: block;
+      font-size: clamp(11px, 0.9vw, 13px);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .mock-row span {
+      color: var(--muted);
+      font-size: clamp(10px, 0.78vw, 11px);
+    }
+
+    .web-map {
+      position: relative;
+      min-width: 0;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      background: #f7f8f5;
+    }
+
+    .web-toolbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      padding: clamp(10px, 1.3vh, 14px);
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: clamp(10px, 0.82vw, 12px);
+    }
+
+    .web-toolbar a {
+      color: var(--cyan);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .mock-map-canvas {
+      padding: clamp(14px, 2vh, 22px);
+      display: grid;
+      place-items: center;
+      min-height: 0;
+    }
+
+    .mock-map-canvas svg {
+      width: min(100%, 430px);
+      height: auto;
+      display: block;
+    }
+
+    .media-demo {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: clamp(16px, 2.2vw, 28px);
+      align-items: stretch;
+    }
+
+    .media-board {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(14px, 1.8vw, 22px);
+      min-width: 0;
+    }
+
+    .media-slot {
+      border: 1px solid var(--line);
+      background: #fff;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-width: 0;
+      min-height: clamp(330px, 48vh, 430px);
+    }
+
+    .media-slot header {
+      padding: clamp(12px, 1.5vh, 16px);
+      border-bottom: 1px solid var(--line);
+      background: var(--pale);
+    }
+
+    .media-slot header strong {
+      display: block;
+      font-size: clamp(15px, 1.2vw, 18px);
+    }
+
+    .media-slot header span {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: clamp(10px, 0.82vw, 12px);
+    }
+
+    .placeholder-canvas {
+      display: grid;
+      place-items: center;
+      padding: clamp(12px, 1.8vh, 20px);
+      background: #fafafa;
+      min-height: 0;
+    }
+
+    .image-placeholder,
+    .video-placeholder {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      border: 1px dashed #9aa5ad;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #f4f7f6, #ffffff);
+    }
+
+    button.image-placeholder,
+    button.video-placeholder {
+      color: var(--muted);
+      text-decoration: none;
+      cursor: pointer;
+      font: inherit;
+      appearance: none;
+      padding: 0;
+    }
+
+    button.image-placeholder:hover,
+    button.video-placeholder:hover {
+      border-color: var(--cyan);
+      box-shadow: inset 0 0 0 1px var(--cyan);
+    }
+
+    .image-placeholder.has-preview,
+    .video-placeholder.has-preview {
+      border-style: solid;
+      background: #fff;
+    }
+
+    .image-placeholder.has-preview::before,
+    .image-placeholder.has-preview::after,
+    .video-placeholder.has-preview::before {
+      display: none;
+    }
+
+    .placeholder-label {
+      z-index: 1;
+      display: grid;
+      gap: 6px;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: clamp(10px, 0.82vw, 12px);
+    }
+
+    .placeholder-label strong {
+      color: #111;
+      font-size: clamp(13px, 1vw, 15px);
+    }
+
+    .image-placeholder::before {
+      content: "";
+      position: absolute;
+      inset: auto 12% 13% 12%;
+      height: 38%;
+      background: linear-gradient(135deg, #8bb7aa 0 45%, #c8d8cf 45% 100%);
+      clip-path: polygon(0 100%, 30% 38%, 48% 72%, 64% 30%, 100% 100%);
+      opacity: 0.85;
+    }
+
+    .image-placeholder::after {
+      content: "";
+      position: absolute;
+      right: 18%;
+      top: 18%;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #d7b98d;
+      opacity: 0.9;
+    }
+
+    .video-placeholder::before {
+      content: "";
+      width: 0;
+      height: 0;
+      border-top: 24px solid transparent;
+      border-bottom: 24px solid transparent;
+      border-left: 38px solid var(--cyan);
+      filter: drop-shadow(0 8px 18px rgba(15, 110, 120, 0.2));
+    }
+
+    .media-preview {
+      width: 100%;
+      height: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border: 1px solid var(--line);
+      background: #fff;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hidden-file-input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .media-slot code {
+      display: block;
+      padding: clamp(10px, 1.3vh, 14px);
+      border-top: 1px solid var(--line);
+      color: #111;
+      font-family: var(--mono);
+      font-size: clamp(10px, 0.82vw, 12px);
+      line-height: 1.45;
+      white-space: pre-wrap;
+      background: #fff;
+    }
+
+    .media-rules {
+      display: grid;
+      gap: clamp(10px, 1.3vh, 14px);
+      align-content: stretch;
+    }
+
+    .media-rules .node {
+      min-height: 0;
+      padding: clamp(12px, 1.6vh, 16px);
+    }
+
+    .inspection-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(18px, 2.4vw, 30px);
+      align-items: stretch;
+    }
+
+    .inspection-card {
+      border: 1px solid var(--line);
+      border-top: clamp(5px, 0.7vh, 7px) solid var(--cyan);
+      background: #fff;
+      padding: clamp(16px, 2.1vh, 24px);
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: clamp(12px, 1.6vh, 18px);
+      min-width: 0;
+    }
+
+    .inspection-card .no {
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: clamp(11px, 0.9vw, 13px);
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .inspection-card h3 {
+      font-size: clamp(19px, 1.55vw, 24px);
+      line-height: 1.18;
+    }
+
+    .inspection-card p,
+    .inspection-card li {
+      color: var(--muted);
+      font-size: clamp(12px, 1vw, 15px);
+      line-height: 1.42;
+    }
+
+    .check-chain {
+      display: grid;
+      gap: clamp(8px, 1vh, 12px);
+      counter-reset: check-step;
+    }
+
+    .check-chain li {
+      list-style: none;
+      position: relative;
+      padding-left: 34px;
+    }
+
+    .check-chain li::before {
+      counter-increment: check-step;
+      content: counter(check-step);
+      position: absolute;
+      left: 0;
+      top: 0.1em;
+      width: 22px;
+      height: 22px;
+      border: 1px solid var(--cyan);
+      color: var(--cyan);
+      display: grid;
+      place-items: center;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .inspection-foot {
+      border-left: clamp(5px, 0.7vw, 7px) solid var(--cyan);
+      background: var(--pale);
+      padding: clamp(10px, 1.3vh, 14px);
+      color: #333;
+      font-size: clamp(12px, 1vw, 14px);
+      line-height: 1.42;
+    }
+
+    .publish-map {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: clamp(12px, 1.6vw, 20px);
+      align-items: stretch;
+    }
+
+    .publish-card {
+      border: 1px solid var(--line);
+      border-top: clamp(5px, 0.7vh, 7px) solid var(--cyan);
+      background: #fff;
+      padding: clamp(14px, 1.9vh, 20px);
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: clamp(8px, 1vh, 12px);
+      min-width: 0;
+    }
+
+    .publish-card .no {
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: clamp(11px, 0.9vw, 13px);
+      font-weight: 800;
+    }
+
+    .publish-card h3 {
+      font-size: clamp(17px, 1.35vw, 21px);
+      line-height: 1.2;
+    }
+
+    .publish-card p,
+    .publish-card li {
+      color: var(--muted);
+      font-size: clamp(11px, 0.95vw, 14px);
+      line-height: 1.38;
+    }
+
+    .triad,
+    .quad,
+    .duo {
+      display: grid;
+      gap: clamp(12px, 1.6vw, 20px);
+    }
+
+    .triad {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .quad {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .agenda-map {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(16px, 2vw, 26px);
+    }
+
+    .agenda-item {
+      min-height: clamp(280px, 46vh, 390px);
+      padding: clamp(18px, 2.4vh, 28px);
+      border: 1px solid var(--line);
+      border-left: clamp(7px, 0.8vw, 10px) solid var(--cyan);
+      background: #fff;
+      display: grid;
+      align-content: start;
+      gap: clamp(9px, 1.2vh, 14px);
+    }
+
+    .agenda-item .no {
+      color: var(--cyan);
+      font-size: clamp(12px, 1.05vw, 16px);
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+
+    .agenda-item h3 {
+      font-size: clamp(20px, 1.8vw, 28px);
+      line-height: 1.15;
+      font-weight: 700;
+    }
+
+    .agenda-item p,
+    .agenda-item li {
+      font-size: clamp(13px, 1.1vw, 16px);
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .agenda-item ul {
+      display: grid;
+      gap: clamp(5px, 0.8vh, 8px);
+      padding-left: clamp(16px, 1.6vw, 22px);
+    }
+
+    .duo {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .node {
+      min-height: clamp(116px, 17vh, 162px);
+      padding: clamp(13px, 1.8vh, 20px);
+      border: 1px solid var(--line);
+      border-top: clamp(4px, 0.7vh, 6px) solid var(--cyan);
+      background: #fff;
+      display: grid;
+      align-content: start;
+      gap: clamp(7px, 1vh, 11px);
+    }
+
+    .node .no {
+      color: var(--cyan);
+      font-size: clamp(13px, 1.15vw, 16px);
+      font-weight: 700;
+    }
+
+    .node h3 {
+      font-size: clamp(17px, 1.55vw, 22px);
+      line-height: 1.18;
+      font-weight: 700;
+    }
+
+    .node p,
+    .node li {
+      font-size: clamp(12px, 1.08vw, 15px);
+      line-height: 1.42;
+      color: var(--muted);
+    }
+
+    .code-panel {
+      padding: clamp(16px, 2.2vh, 24px);
+      border: 1px solid var(--line);
+      border-left: clamp(6px, 0.8vw, 9px) solid var(--cyan);
+      background: #fff;
+      color: #000;
+      font-family: "Times New Roman", "KaiTi", "楷体", serif;
+      font-size: clamp(13px, 1.12vw, 16px);
+      line-height: 1.48;
+      white-space: pre-wrap;
+      max-height: min(54vh, 420px);
+      overflow: hidden;
+    }
+
+    .accent {
+      color: var(--cyan);
+      font-weight: 700;
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr 1.1fr 1fr;
+      border: 1px solid var(--line);
+    }
+
+    .cell {
+      min-height: clamp(56px, 8vh, 78px);
+      padding: clamp(10px, 1.4vh, 15px);
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      font-size: clamp(12px, 1.05vw, 15px);
+      line-height: 1.38;
+      display: flex;
+      align-items: center;
+    }
+
+    .cell:nth-child(4n) {
+      border-right: 0;
+    }
+
+    .cell:nth-last-child(-n+4) {
+      border-bottom: 0;
+    }
+
+    .cell.head {
+      background: var(--cyan);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .axis {
+      position: relative;
+      height: min(52vh, 390px);
+      border-left: 1px solid #000;
+      border-bottom: 1px solid #000;
+      margin: clamp(18px, 2.6vh, 28px) clamp(16px, 2vw, 30px) 0;
+    }
+
+    .axis-label {
+      position: absolute;
+      color: #555;
+      font-size: clamp(12px, 1vw, 14px);
+      font-weight: 700;
+    }
+
+    .axis-label.y {
+      left: 0;
+      top: calc(-1 * clamp(26px, 3vh, 34px));
+    }
+
+    .axis-label.x {
+      right: 0;
+      bottom: calc(-1 * clamp(28px, 3.4vh, 38px));
+    }
+
+    .point {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      min-width: clamp(82px, 9vw, 118px);
+      padding: clamp(7px, 1vh, 10px) clamp(9px, 1.2vw, 13px);
+      border: 1px solid currentColor;
+      background: #fff;
+      text-align: center;
+      font-size: clamp(13px, 1.1vw, 16px);
+      font-weight: 700;
+    }
+
+    .md-point { left: 25%; bottom: 42%; color: #5a6978; }
+    .html-point { left: 66%; bottom: 64%; color: var(--cyan); }
+    .ppt-point { left: 82%; bottom: 28%; color: var(--red); }
+    .xml-point { left: 38%; bottom: 78%; color: #18705e; }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: clamp(8px, 1vw, 12px);
+      align-items: stretch;
+    }
+
+    .step {
+      position: relative;
+      min-height: clamp(116px, 18vh, 160px);
+      padding: clamp(12px, 1.8vh, 18px);
+      border: 1px solid var(--line);
+      border-top: clamp(5px, 0.7vh, 7px) solid var(--cyan);
+      display: grid;
+      align-content: center;
+      text-align: center;
+      gap: clamp(7px, 1vh, 10px);
+    }
+
+    .step:not(:last-child)::after {
+      content: ">";
+      position: absolute;
+      right: calc(-1 * clamp(12px, 1.3vw, 18px));
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--cyan);
+      font-size: clamp(19px, 2vw, 28px);
+      font-weight: 700;
+      z-index: 2;
+    }
+
+    .step strong {
+      font-size: clamp(15px, 1.35vw, 19px);
+      line-height: 1.2;
+    }
+
+    .step small {
+      color: #444;
+      font-size: clamp(12px, 1vw, 14px);
+      line-height: 1.4;
+    }
+
+    .bars {
+      display: grid;
+      gap: clamp(13px, 1.8vh, 20px);
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: minmax(110px, 150px) 1fr minmax(62px, 86px);
+      gap: clamp(12px, 1.6vw, 18px);
+      align-items: center;
+      font-size: clamp(14px, 1.2vw, 17px);
+      font-weight: 700;
+    }
+
+    .track {
+      height: clamp(12px, 1.8vh, 18px);
+      border: 1px solid var(--line);
+      background: #f1f1f1;
+    }
+
+    .fill {
+      height: 100%;
+      background: var(--cyan);
+    }
+
+    .quote {
+      max-width: 980px;
+      margin: 0 auto;
+      font-size: clamp(29px, 4.2vw, 58px);
+      line-height: 1.18;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: clamp(18px, 2.4vw, 28px);
+      align-items: stretch;
+    }
+
+    .rail {
+      background: var(--cyan);
+      color: #fff;
+      padding: clamp(16px, 2vh, 24px);
+      display: grid;
+      align-content: center;
+      gap: clamp(8px, 1vh, 12px);
+      font-size: clamp(19px, 2vw, 30px);
+      line-height: 1.15;
+      font-weight: 700;
+    }
+
+    .rail small {
+      font-size: clamp(13px, 1.1vw, 16px);
+      line-height: 1.35;
+      font-weight: 400;
+    }
+
+    ul {
+      padding-left: clamp(16px, 1.7vw, 22px);
+    }
+
+    @media (max-width: 900px) {
+      .slide {
+        padding: clamp(18px, 3vh, 28px) clamp(18px, 4vw, 34px);
+      }
+
+      .header,
+      .split,
+      .comparison,
+      .duo {
+        grid-template-columns: 1fr;
+      }
+
+      .triad {
+        grid-template-columns: 1fr;
+      }
+
+      .triad .node:nth-child(n+3) {
+        display: none;
+      }
+
+      .quad {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .flow {
+        grid-template-columns: 1fr;
+      }
+
+      .step:not(:last-child)::after {
+        display: none;
+      }
+
+      .brand {
+        font-size: clamp(18px, 4vw, 24px);
+      }
+
+      .hint {
+        display: none;
+      }
+    }
+
+    @media (max-height: 700px) {
+      .slide {
+        gap: clamp(8px, 1.4vh, 14px);
+      }
+
+      .content {
+        max-height: 72vh;
+      }
+
+      .node,
+      .step {
+        min-height: clamp(88px, 15vh, 124px);
+      }
+    }
+
+    @media (max-height: 600px) {
+      .title-box h1,
+      .title-box h2 {
+        font-size: clamp(16px, 1.7vw, 24px);
+      }
+
+      .explain,
+      p {
+        font-size: clamp(12px, 1.1vw, 16px);
+      }
+
+      .footer {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+    }
+
+    @media print {
+      .hint,
+      .progress {
+        display: none;
+      }
+
+      .slide {
+        page-break-after: always;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"></div>
+  <div class="hint">↑ ↓ / Space 翻页</div>
+
+  <main class="deck">
+    <section class="slide cover">
+      <div class="content">
+        <div class="cover-title">
+          <h1>AI 内容工作流中的 HTML 格式指南</h1>
+          <div class="core-claim">面向 AI 辅助内容生产，系统说明 HTML 在结构化表达、浏览器呈现、交互扩展与跨格式输出中的中间层作用。</div>
+        </div>
+      </div>
+      <div class="footer">
+        <div class="module-tag">AI Content Workflow</div>
+        <div class="footer-rule"></div>
+        <div class="brand"><span>HAI</span> Guidelines</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <header class="header frame">
+        <div class="title-box"><div class="eyebrow">Table of Agenda</div><h2>内容结构与模块安排</h2></div>
+        <div class="explain">本指南由概念与格式定位、工作流程与交互实现、应用边界与方法总结三部分构成。</div>
+      </header>
+      <div class="content agenda-map">
+        <div class="agenda-item">
+          <div class="no">01 CONCEPT & POSITIONING</div>
+          <h3>概念解析与格式定位</h3>
+          <p>解释 HTML 的狭义与广义含义，并说明其在 AI 内容工作流中的中间层作用。</p>
+          <ul>
+            <li>狭义 HTML 与广义 HTML</li>
+            <li>HTML 功能边界与格式关系</li>
+            <li>HTML / CSS / JavaScript 分层机制</li>
+            <li>代码检查与 AI 协作适配性</li>
+          </ul>
+        </div>
+        <div class="agenda-item">
+          <div class="no">02 WORKFLOW & INTERACTION</div>
+          <h3>工作流程与交互实现</h3>
+          <p>展示从内容原稿到 HTML 页面，再到表现层、行为层和演示输出的转换路径。</p>
+          <ul>
+            <li>Markdown 原稿组织</li>
+            <li>HTML 结构转换</li>
+            <li>Pandoc 跨格式转换</li>
+            <li>分层复杂度控制</li>
+            <li>多媒体占位与交互展示</li>
+          </ul>
+        </div>
+        <div class="agenda-item">
+          <div class="no">03 SCOPE & METHOD</div>
+          <h3>应用边界与方法总结</h3>
+          <p>说明 HTML 工作流的适用场景、常见误解与最终方法论。</p>
+          <ul>
+            <li>典型应用场景</li>
+            <li>局限性与常见误解</li>
+            <li>以 HTML 为中间主干的流程</li>
+            <li>HTML 发布方式</li>
+          </ul>
+        </div>
+      </div>
+      <footer class="footer"><div class="module-tag"><span class="page">02 / 22</span>内容结构</div><div class="footer-rule"></div><div class="brand"><span>HAI</span> Guidelines</div></footer>
+    </section>
+
+    <section class="slide">
+      <header class="header frame">
+        <div class="title-box"><div class="eyebrow">Concept Definition</div><h2>HTML 的狭义与广义</h2></div>
+        <div class="explain">HTML 既可在狭义上指文本标记结构，也可在广义上指浏览器环境中的完整页面交付形态。</div>
+      </header>
+      <div class="content scope-map">
+        <div class="scope-card">
+          <h3>狭义 HTML：标记结构</h3>
+          <p>指 `.html` 文件中的标记结构：标题、段落、列表、表格、链接、图片、表单。</p>
+          <ul>
+            <li>描述页面内容及其层级关系。</li>
+            <li>支持 AI 对内容节点进行定位与修改。</li>
+            <li>本质上属于可读、可检查的文本结构。</li>
+          </ul>
+        </div>
+        <div class="scope-card">
+          <h3>广义 HTML：页面成果</h3>
+          <p>指浏览器可打开的完整页面：HTML 提供结构，CSS 控制外观，JavaScript 增加交互。</p>
+          <ul>
+            <li>承载用户最终可见与可操作的界面。</li>
+            <li>支持浏览器即时渲染与验证。</li>
+            <li>适合作为 AI 内容进入展示层的中间成果。</li>
+          </ul>
+        </div>
+      </div>
+      <footer class="footer"><div class="module-tag"><span class="page">03 / 22</span>概念解析与格式定位</div><div class="footer-rule"></div><div class="brand"><span>HAI</span> Guidelines</div></footer>
+    </section>
+
+    <section class="slide">
+      <header class="header frame">
+        <div class="title-box"><div class="eyebrow">Historical Context</div><h2>HTML 的功能边界持续扩展</h2></div>
+        <div class="explain">HTML 从超文本文档结构逐步扩展为网页、应用界面、交互原型与 AI 内容成果的承载层。</div>
+      </header>
+      <div class="content flow wide-flow">
+        <div class="step"><strong>文档</strong><small>标题、段落<br />链接、图片</small></div>
+        <div class="step"><strong>网页</strong><small>CSS 加入<br />版式与品牌</small></div>
+        <div class="step"><strong>应用</strong><small>JavaScript 驱动<br />状态与交互</small></div>
+        <div class="step"><strong>组件</strong><small>卡片、表单<br />仪表盘、图表</small></div>
+        <div class="step"><strong>AI 成果</strong><small>可生成<br />可预览、可迭代</small></div>
+      </div>
+      <footer class="footer"><div class="module-tag"><span class="page">04 / 22</span>概念解析与格式定位</div><div class="footer-rule"></div><div class="brand"><span>HAI</span> Guidelines</div></footer>
+    </section>
+
+    <section class="slide">
+      <header class="header frame">
+        <div class="title-box"><div class="eyebrow">Format Positioning</div><h2>HTML 在 AI 内容工作流中的中间层作用</h2></div>
+        <div class="explain">不同格式对应不同工作阶段：Markdown 侧重内容组织，HTML 侧重页面呈现，PPT/PDF 侧重演示与分发。</div>
+      </header>
+      <div class="content">
+        <div class="axis">
+          <span class="axis-label y">机器可读性更强</span>
+          <span class="axis-label x">视觉表达力更强</span>
+          <span class="point md-point">Markdown</span>
+          <span class="point html-point">HTML</span>
+          <span class="point ppt-point">PPT</span>
+          <span class="point xml-point">XML</span>
+        </div>
+        <div class="xml-note">
+          <div class="callout"><strong>XML：机器可读性高，但 AI 适配度有限</strong><br />XML 标签严格、层级明确，适合程序校验与数据交换；但其语义通常依赖外部 schema、业务约定或文件规范，标签冗长且缺少直接呈现环境，因此不适合作为 AI 内容迭代的主要工作层。</div>
+          <div class="callout"><strong>PPT：视觉表达强，但机器可读性与 AI 适配性较弱</strong><br />PPT 的信息大量嵌入文本框、坐标、图层、动画与母版关系中。AI 即使能读取文字，也难以稳定理解视觉顺序、强调层级和对象关系，因此后续修改成本较高。</div>
+          <div class="callout"><strong>HTML：处于结构可读与浏览器呈现之间</strong><br />HTML 以标签表达内容关系，又能在浏览器中直接验证样式和交互，因而更适合作为 AI 内容生产中的中间层格式。</div>
+        </div>
+      </div>
+      <footer class="footer"><div class="module-tag"><span class="page">05 / 22</span>概念解析与格式定位</div><div class="footer-rule"></div><div class="brand"><span>HAI</span> Guidelines</div></footer>
+    </section>
+
+    <section class="slide">
+      <header class="header frame">
+        <div class="title-box"><div class="eyebrow">Concept Analysis I</div><h2>HTML 的结构显式性</h2></div>
+        <div class="explain">HTML 通过标签结构描述标题、段落、列表和区块，使内容关系从视觉推断转向语义标记。</div>
+      </header>
+      <div class="content annotated-code">
+        <div class="lead-block">
+          <p><strong>结构显式性</strong> 是 HTML 区别于纯视觉排版的重要特征。</p>
+          <p>在 HTML 中，标题、段落、列表与章节均由明确标签承载，模型无需单纯依赖字号、坐标或图层进行推断。</p>
+          <p>因此，HTML 更适合作为 AI 进行局部修改、结构重排与内容复用的中间格式。</p>
+          <div class="note-stack">
+            <div class="callout"><strong>&lt;main&gt;</strong> 页面主体；用于区分核心内容与辅助信息。</div>
+            <div class="callout"><strong>&lt;section&gt;</strong> 主题分组；支持按主题拆分、增删与重排。</div>
+            <div class="callout"><strong>DOM 树</strong> 浏览器解析 HTML 后形成的文档对象结构，可用于检查整体层级。</div>
+          </div>
+        </div>
+        <div class="structure-panel">
+          <pre class="code-panel"><code><span class="accent">&lt;article&gt;</span>
+  &lt;h1&gt;AI 时代为什么要重视 HTML&lt;/h1&gt;
+  &lt;p&gt;HTML 是内容进入浏览器界面的中间层。&lt;/p&gt;
+  &lt;section&gt;
+    &lt;h2&gt;核心理由&lt;/h2&gt;
+    &lt;ul&gt;
+      &lt;li&gt;结构清楚&lt;/li&gt;
+      &lt;li&gt;容易修改&lt;/li&gt;
+      &lt;li&gt;可以直接预览&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/section&gt;
+<span class="accent">&lt;/article&gt;</span></code></pre>
+          <div class="dom-tree-card">
+            <h3>整体结构：DOM（Document Object Model）树</h3>
+            <pre class="dom-tree"><code><span class="dom-node">html</span>
+├─ <span class="dom-node">head</span>
+│  ├─ meta
+│  ├─ title
+│  └─ style
+└─ <span class="dom-node">body</span>
+   ├─ div <span class="dom-class">.progress</span>
+   ├─ div <span class="dom-class">.hint</span>
+   ├─ main <span class="dom-class">.deck</span>
+   │  ├─ section <span class="dom-class">.slide</span>
+   │  ├─ section <span class="dom-class">.slide</span>
+   │  └─ ...
+   └─ script</code></pre>
+          </div>
+        </div>
+      </div>
+      <footer class="footer"><div class="module-tag"><span class="page">06 / 22</span>概念解析与格式定位</div><div class="footer-rule"></div><div class="brand"><span>HAI</span> Guidelines</div></footer>
+    </section>
+
+    <section class="slide">
+      <header class="header frame">
+        <div class="title-box"><div class="eyebrow">Concept Analysis II</div><h2>HTML、CSS 与 JavaScript 的分层机制</h2></div>
+        <div class="explain">页面系统可分为结构层、表现层与行为层，三者分别承担内容组织、视觉呈现与交互响应功能。</div>
+      </header>
+      <div class="content code-demo">
+        <div>
+          <div class="triad">
+            <div class="node"><div class="no">HTML</div><h3>结构层</h3><p>定义页面内容对象及其语义关系。</p></div>
+            <div class="node"><div class="no">CSS</div><h3>表现层</h3><p>定义布局、样式、视觉层级与响应式适配。</p></div>
+            <div class="node"><div class="no">JS</div><h3>行为层</h3><p>定义用户操作、状态变化与动态反馈机制。</p></div>
+          </div>
+          <a class="codepen-link" href="https://codepen.io/pen/" target="_blank" rel="noreferrer">在 CodePen 中新建可运行页面 →</a>
+        </div>
+        <div class="layer-source" aria-label="HTML CSS JavaScript 代码示例">
+          <header>
+            <div class="layer-source-title">
+              <h3 id="demoTitle">HTML</h3>
+              <p class="demo-caption" id="demoText">结构层：粮食供给网络沙盘的节点与指标容器。</p>
+            </div>
+            <button class="copy-code-btn" id="copyLayerCode" type="button">复制代码</button>
+          </header>
+          <pre class="layer-code-panel"><code id="layerCode"></code></pre>
+          <div class="demo-controls">
+            <button class="active" data-demo="html" type="button">HTML</button>
+            <button data-demo="css" type="button">CSS</button>
+            <button data-demo="js" type="button">JS</button>
+          </div>
+        </div>
+      </div>
+      <footer class="footer"><div class="module-tag"><span class="page">07 / 22</span>概念解析与格式定位</div><div class="footer-rule"></div><div class="brand"><span>HAI</span> Guidelines</div></footer>
+    </section>
+
+    <section class="slide">
+      <header class="header frame">
+        <div class="title-box"><div class="eyebrow">Code Inspection</div><h2>HTML 代码初步检查</h2></div>
+        <div class="explain">初步检查的目标不是完整调试，而是快速判断结构、样式与行为分别位于何处，并确认浏览器能否正确加载。</div>
+      </header>
+      <div class="content inspection-grid">
+        <div class="inspection-card">
+          <div class="no">SCENARIO A</div>
+          <h3>HTML / CSS / JS 三者拆开</h3>
+          <p>适用于正式项目、可维护页面或多人协作场景。检查重点是文件之间是否被正确引用。</p>
+          <ol class="check-chain">
+            <li>先打开 `.html`，确认主体结构、标题、按钮、图片和容器是否存在。</li>
+            <li>检查 `&lt;link rel="stylesheet"&gt;` 是否正确指向 `.css` 文件。</li>
+            <li>检查 `&lt;script src="..."&gt;` 是否正确指向 `.js` 文件。</li>
+            <li>打开浏览器控制台，查看资源加载、路径错误和脚本报错。</li>
+          </ol>
+          <div class="inspection-foot">判断顺序：结构是否存在 → 样式是否生效 → 行为是否触发。</div>
+        </div>
+        <div class="inspection-card">
+          <div class="no">SCENARIO B</div>
+          <h3>HTML / CSS / JS 写在同一文件</h3>
+          <p>适用于单文件演示、快速原型或 AI 生成页面。检查重点是三层代码是否被放入正确区域。</p>
+          <ol class="check-chain">
+            <li>先看主体标签：`&lt;section&gt;`、`&lt;div&gt;`、`&lt;button&gt;` 是否构成清晰结构。</li>
+            <li>再找 `&lt;style&gt;` 区域，确认选择器能对应到 HTML 中的 `class` 或 `id`。</li>
+            <li>最后找 `&lt;script&gt;` 区域，确认事件监听、函数名和元素 `id` 是否一致。</li>
+            <li>在浏览器中逐项点击，验证状态切换、上传、播放或复制等交互是否可用。</li>
+          </ol>
+          <div class="inspection-foot">检查元素通常优先显示 DOM 结构，因此会先看到 `body / main / div`；若要完整查看 `style` 与 `script`，应使用“查看源代码”或 DevTools 的 Sources 面板。</div>
+        </div>
+      </div>
+      <footer class="footer"><div class="module-tag"><span class="page">08 / 22</span>概念解析与格式定位</div><div class="footer-rule"></div><div class="brand"><span>HAI</span> Guidelines</div></footer>
+    </section>
+
+    <section class="slide">
+      <header class="header frame">
+        <div class="title-box"><div class="eyebrow">AI Compatibility</div><h2>HTML 面向 AI 协作的适配性</h2></div>
+        <div class="explain">相较于高度依赖视觉对象和坐标关系的格式，HTML 在结构显式性、可检查性和可预览性方面更具优势。</div>
+      </header>
+      <div class="content triad">
+        <div class="node"><div class="no">01</div><h3>文本可检查</h3><p>源代码就是文本，AI 能读取、定位、修改具体节点。</p></div>
+        <div class="node"><div class="no">02</div><h3>结构可追踪</h3><p>标题、段落、组件、表格都有明确边界，少依赖视觉猜测。</p></div>
+        <div class="node"><div class="no">03</div><h3>结果可预览</h3><p>浏览器立刻验证排版、交互和响应式，不必等复杂导出链路。</p></div>
+      </div>
+      <footer class="footer"><div class="module-tag"><span class="page">09 / 22</span>概念解析与格式定位</div><div class="footer-rule"></div><div class="brand"><span>HAI</span> Guidelines</div></footer>
+    </section>
+
+    <section class="slide">
+      <header class="header frame">
+        <div class="title-box"><div class="eyebrow">AI Collaboration</div><h2>HTML 协作任务的四种基本类型</h2></div>
+        <div class="explain">AI 与 HTML 的协作不应仅停留在页面生成，而应覆盖读取、生成、修改与检查等连续任务。</div>
+      </header>
+      <div class="content quad">
+        <div class="node"><div class="no">读取</div><h3>理解结构</h3><p>识别标题、列表、表格、卡片、导航和主要内容区。</p></div>
+        <div class="node"><div class="no">生成</div><h3>从需求到页面</h3><p>把大纲、资料、Markdown 转成可打开的页面。</p></div>
+        <div class="node"><div class="no">修改</div><h3>局部迭代</h3><p>按章节、组件、表格或交互逻辑进行局部调整。</p></div>
+        <div class="node"><div class="no">检查</div><h3>质量验证</h3><p>检查内容重复、结构不清、屏幕溢出与交互失效等问题。</p></div>
+      </div>
+      <footer class="footer"><div class="module-tag"><span class="page">10 / 22</span>概念解析与格式定位</div><div class="footer-rule"></div><div class="brand"><span>HAI</span> Guidelines</div></footer>
+    </section>
+
+    <section class="slide">
+      <header class="header frame">
+        <div class="title-box"><div class="eyebrow">Prompt Constraint</div><h2>HTML 生成中的结构约束原则</h2></div>
+        <div class="explain">在 AI 生成 HTML 时，应优先约束内容结构、页面模块与输出边界，再进入视觉样式和交互设计。</div>
+      </header>
+      <div class="content code-demo">
+        <pre class="code-panel"><code>低约束输入：
+“生成一个视觉效果较好的网页。”
+
+结构化输入：
+请生成一个单文件 HTML 页面：
+1. 主题：AI 时代的 HTML 文件格式指南
+2. 受众：非前端背景的科研与内容生产者
+3. 结构：前言、格式定位、概念解析、工作流程、应用边界
+4. 要求：每个 section 对应一个概念或流程单元
+5. 结构确认后，再补充 CSS 表现层与少量 JavaScript 行为层</code></pre>
+        <div class="lead-block">
+          <p><strong>原则：</strong>低约束输入容易使模型优先生成视觉装饰；结构化输入有助于稳定页面层级与内容边界。</p>
+          <p>在结构明确后，再追加表现层和行为层，能够降低后续重构成本。</p>
+        </div>
+      </div>
+      <footer class="footer"><div class="module-tag"><span class="page">11 / 22</span>概念解析与格式定位</div><div class="footer-rule"></div><div class="brand"><span>HAI</span> Guidelines</div></footer>
+    </section>
+
+    
+    <section class="slide">
+      <header class="header frame">
+        <div class="title-box"><div class="eyebrow">Boundary Condition</div><h2>HTML 工作流的复杂度边界</h2></div>
+        <div class="explain">HTML 并非天然降低复杂度；当结构、样式与脚本缺乏分层约束时，页面同样会出现维护困难。</div>
+      </header>
+      <div class="content split">
+        <div class="lead-block">
+          <p>当 HTML 内部混入大量内联样式、重复组件与长脚本时，其可读性与可维护性会显著下降。</p>
+          <p><strong>约束原则：</strong>HTML 负责结构，CSS 负责表现，JavaScript 负责必要行为，避免三层职责混写。</p>
+          <p class="token-footnote">HTML 的优势在于可被分层控制，而非自动生成高质量结构。</p>
+        </div>
+        <div class="token-scale">
+          <div class="bar-row"><span>结构清楚</span><div class="track"><div class="fill" style="width: 34%; background: #5a6978;"></div></div><span>易改</span></div>
+          <div class="bar-row"><span>样式集中</span><div class="track"><div class="fill" style="width: 48%;"></div></div><span>可控</span></div>
+          <div class="bar-row"><span>脚本克制</span><div class="track"><div class="fill" style="width: 62%; background: #18705e;"></div></div><span>可查</span></div>
+          <div class="bar-row"><span>全部混写</span><div class="track"><div class="fill" style="width: 90%; background: var(--red);"></div></div><span>高风险</span></div>
+        </div>
+      </div>
+      <footer class="footer"><div class="module-tag"><span class="page">12 / 22</span>工作流程与交互实现</div><div class="footer-rule"></div><div class="brand"><span>HAI</span> Guidelines</div></footer>
+    </section>
+
+    <section class="slide">
+      <header class="header frame">
+        <div class="title-box"><div class="eyebrow">Workflow I</div><h2>从内容原稿到交互页面的渐进式工作流</h2></div>
+        <div class="explain">HTML 工作流以内容原稿为起点，先形成可渲染的结构层，再逐步补充表现层与行为层。</div>
+      </header>
+      <div class="content workflow-combined">
+        <div class="flow wide-flow">
+          <div class="step"><strong>Markdown 原稿</strong><small>快速写作<br />组织文本层级</small></div>
+          <div class="step"><strong>HTML 结构</strong><small>标题、列表、区块<br />进入页面语义</small></div>
+          <div class="step"><strong>CSS 表现</strong><small>布局、层级<br />视觉节奏</small></div>
+          <div class="step"><strong>JavaScript 行为</strong><small>切换、反馈<br />状态响应</small></div>
+          <div class="step"><strong>浏览器验证</strong><small>展示、调试<br />发布复用</small></div>
+        </div>
+        <div class="workflow-detail">
+          <div class="code-pair">
+            <pre class="code-panel"><code># 为什么重视 HTML
+
+- 浏览器可以直接打开
+- 结构和样式可以分层
+- AI 可以局部修改页面</code></pre>
+            <pre class="code-panel"><code>&lt;section&gt;
+  &lt;h2&gt;为什么重视 HTML&lt;/h2&gt;
+  &lt;ul&gt;
+    &lt;li&gt;浏览器可以直接打开&lt;/li&gt;
+    &lt;li&gt;结构和样式可以分层&lt;/li&gt;
+    &lt;li&gt;AI 可以局部修改页面&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/section&gt;</code></pre>
+          </div>
+          <div class="enhance-stack">
+            <div class="node"><div class="no">结构稳定</div><h3>内容确认</h3><p>明确章节目标、信息顺序与案例配置。</p></div>
+            <div class="node"><div class="no">视觉增强</div><h3>表现设计</h3><p>通过卡片、表格、流程图和对比矩阵增强理解。</p></div>
+            <div class="node"><div class="no">行为增强</div><h3>交互补充</h3><p>通过翻页、切换、筛选和展开等机制支持演示场景。</p></div>
+          </div>
+        </div>
+      </div>
+      <footer class="footer"><div class="module-tag"><span class="page">13 / 22</span>工作流程与交互实现</div><div class="footer-rule"></div><div class="brand"><span>HAI</span> Guidelines</div></footer>
+    </section>
+
+    <section class="slide">
+      <header class="header frame">
+        <div class="title-box"><div class="eyebrow">Pandoc Conversion</div><h2>Markdown、HTML 与 PPT 的格式转换路径</h2></div>
+        <div class="explain">Pandoc 可将 Markdown 解析为 HTML，也可将结构化 HTML 转换为 PPTX；其优势在于语义结构迁移，而非浏览器视觉的逐像素复刻。</div>
+      </header>
+      <div class="content pandoc-page">
+        <div class="conversion-panel">
+          <div class="mini-flow">
+            <div class="step"><strong>Markdown</strong><small>内容原稿<br />标题与列表</small></div>
+            <div class="step"><strong>HTML</strong><small>浏览器呈现<br />结构化页面</small></div>
+            <div class="step"><strong>PPTX</strong><small>演示交付<br />结构化幻灯片</small></div>
+          </div>
+          <a class="pandoc-link" href="https://github.com/jgm/pandoc" target="_blank" rel="noopener">
+            <span>GitHub</span>
+            <strong>jgm / pandoc</strong>
+            <small>https://github.com/jgm/pandoc</small>
+            <small>下载后在系统终端、VS Code 终端或 Codex 工作区终端中调用。</small>
+          </a>
+          <div class="command-block">
+            <pre class="code-panel"><code># VS Code Terminal / Codex Shell
+cd "G:\PPT"
+
+# Markdown -> HTML
+pandoc ".\PPT_DESIGN.md" -s -o ".\PPT_DESIGN.html"
+
+# HTML -> PPTX
+pandoc ".\PPT_DESIGN.html" -t pptx -o ".\PPT_DESIGN_from_html.pptx"</code></pre>
+          </div>
+        </div>
+        <div class="resource-panel">
+          <div class="lead-block">
+            <p><strong>操作逻辑：</strong>先以 Markdown 稳定内容结构，再输出 HTML 进行浏览器检查；当需要演示交付时，可通过 Pandoc 生成 PPTX。</p>
+            <p>若目标是保留复杂网页视觉，应优先采用截图或浏览器渲染路径；Pandoc 更适合标题、列表、段落、表格等语义结构迁移。</p>
+          </div>
+          <div class="file-grid">
+            <a class="file-card" href="PPT_DESIGN.md" target="_blank">
+              <div class="file-icon">MD</div>
+              <h3>PPT_DESIGN.md</h3>
+              <p>Markdown 原稿：承载课程内容、章节层级与文本结构。</p>
+            </a>
+            <a class="file-card" href="PPT_DESIGN.html" target="_blank">
+              <div class="file-icon">HTML</div>
+              <h3>PPT_DESIGN.html</h3>
+              <p>HTML 页面：用于浏览器预览、结构检查与视觉调整。</p>
+            </a>
+            <a class="file-card" href="PPT_DESIGN_from_html.pptx" target="_blank">
+              <div class="file-icon">PPTX</div>
+              <h3>PPT_DESIGN_from_html.pptx</h3>
+              <p>PPTX 输出：用于课堂、汇报或后续演示文稿编辑。</p>
+            </a>
+            <a class="file-card" href="ai_html_focus_slides_pandoc_test.pptx" target="_blank">
+              <div class="file-icon">TEST</div>
+              <h3>ai_html_focus_slides_pandoc_test.pptx</h3>
+              <p>对照输出：浏览器幻灯片直接转换后，仅保留文本结构，版式拆分效果有限。</p>
+            </a>
+          </div>
+        </div>
+      </div>
+      <footer class="footer"><div class="module-tag"><span class="page">14 / 22</span>工作流程与交互实现</div><div class="footer-rule"></div><div class="brand"><span>HAI</span> Guidelines</div></footer>
+    </section>
+
+    <section class="slide">
+      <header class="header frame">
+        <div class="title-box"><div class="eyebrow">Format Comparison</div><h2>HTML 与 PPT 的阶段性差异</h2></div>
+        <div class="explain">HTML 更适合前期结构迭代与交互验证，PPT 更适合后期现场表达与视觉定稿。</div>
+      </header>
+      <div class="content matrix">
+        <div class="cell head">维度</div><div class="cell head">HTML</div><div class="cell head">PPT</div><div class="cell head">建议</div>
+        <div class="cell">修改方式</div><div class="cell">调整结构、样式与脚本</div><div class="cell">移动对象、调整版式</div><div class="cell">前期迭代更适合 HTML</div>
+        <div class="cell">展示方式</div><div class="cell">浏览器、网页、嵌入式页面</div><div class="cell">会议、课堂、答辩</div><div class="cell">现场表达仍可转为 PPT</div>
+        <div class="cell">复用方式</div><div class="cell">组件化、模板化、区块复用</div><div class="cell">页面与对象复制</div><div class="cell">长期内容项目更适合 HTML</div>
+        <div class="cell">交互能力</div><div class="cell">支持点击、状态与动态反馈</div><div class="cell">主要依赖动画与页面跳转</div><div class="cell">交互演示优先选择 HTML</div>
+      </div>
+      <footer class="footer"><div class="module-tag"><span class="page">15 / 22</span>工作流程与交互实现</div><div class="footer-rule"></div><div class="brand"><span>HAI</span> Guidelines</div></footer>
+    </section>
+
+    <section class="slide">
+      <header class="header frame">
+        <div class="title-box"><div class="eyebrow">Output Strategy</div><h2>HTML 与 PPT 的两大类输出策略</h2></div>
+        <div class="explain">HTML 与 PPT 的关系不只是一种格式转换，也可以是演示载体的替代关系；应依据交付场景选择路径。</div>
+      </header>
+      <div class="content output-strategy">
+        <div class="strategy-card">
+          <div class="no">第一类</div>
+          <h3>用 HTML 代替 PPT 进行演示</h3>
+          <p>直接将浏览器幻灯片作为演示成果，保留网页的动画、交互、响应式布局与实时调试能力。</p>
+          <div class="repo-list">
+            <a class="repo-link" href="https://github.com/zarazhangrui/frontend-slides" target="_blank" rel="noopener">
+              <strong>frontend-slides</strong>
+              <span>https://github.com/zarazhangrui/frontend-slides</span>
+            </a>
+            <a class="repo-link" href="https://github.com/tristan-mcinnis/pptx-from-layouts-skill" target="_blank" rel="noopener">
+              <strong>pptx-from-layouts-skill</strong>
+              <span>https://github.com/tristan-mcinnis/pptx-from-layouts-skill</span>
+            </a>
+          </div>
+        </div>
+        <div class="strategy-card">
+          <div class="no">第二类</div>
+          <h3>用 HTML 来生成 PPT</h3>
+          <p>当交付对象必须是 PPTX 时，可在 HTML 结构稳定后选择保真输出或结构重建。</p>
+          <div class="subpath-grid">
+            <div class="subpath">
+              <div class="tag">A. Screenshot Fidelity</div>
+              <h4>截图保真型</h4>
+              <p>将浏览器页面逐页截图后插入 PPT，适用于毕业答辩、竞赛展示等质量要求较高、篇幅较短的 PPT，通常约 20 页左右。</p>
+              <a class="repo-link" href="https://notebooklm.google.com/" target="_blank" rel="noopener">
+                <strong>NotebookLM</strong>
+                <span>https://notebooklm.google.com/</span>
+              </a>
+            </div>
+            <div class="subpath">
+              <div class="tag">B. Structural Rebuild</div>
+              <h4>结构重建型</h4>
+              <p>提取标题、段落、图表与列表并重建为 PPT 组件，适用于页数较长、质量要求相对较低的日常课程汇报或过程性材料。</p>
+              <a class="repo-link" href="https://html-ppt-edit.liketalkai.top/" target="_blank" rel="noopener">
+                <strong>HTML PPT Edit</strong>
+                <span>https://html-ppt-edit.liketalkai.top/</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="footer"><div class="module-tag"><span class="page">16 / 22</span>工作流程与交互实现</div><div class="footer-rule"></div><div class="brand"><span>HAI</span> Guidelines</div></footer>
+    </section>
+
+    <section class="slide">
+      <header class="header frame">
+        <div class="title-box"><div class="eyebrow">Behavior Layer</div><h2>JavaScript 的行为层功能</h2></div>
+        <div class="explain">以设施农业占地面积时间轴为例，JavaScript 将静态图片序列组织为可拖动、可播放、可反馈的交互组件。</div>
+      </header>
+      <div class="content behavior-demo">
+        <div class="agri-widget">
+          <div class="agri-widget-head">
+            <div>
+              <h3>2013-2022 年设施农业占地面积</h3>
+              <p>县级空间制图 · 五等分分级 · 年度单年图</p>
+            </div>
+            <div class="agri-year" id="agriYearLabel">2013</div>
+          </div>
+          <div class="agri-map-frame">
+            <img id="agriMapImage" src="file:///G:/浙大/设施农业/重新设计/原始数据/设施农业县级空间制图/年度设施农业占地面积_五等分_单年图/设施农业占地面积_2013_五等分.png" alt="2013 年设施农业占地面积五等分县级空间制图" />
+          </div>
+          <div class="agri-controls">
+            <div class="agri-control-row">
+              <button id="agriPrevBtn" type="button" aria-label="上一年">‹</button>
+              <input id="agriYearSlider" type="range" min="0" max="9" step="1" value="0" aria-label="选择年份" />
+              <button id="agriPlayBtn" type="button" aria-label="播放">▶</button>
+            </div>
+            <div class="agri-status">
+              <span id="agriFileLabel">设施农业占地面积_2013_五等分.png</span>
+              <span>2013-2022</span>
+            </div>
+          </div>
+        </div>
+        <div class="behavior-notes">
+          <div class="node"><div class="no">输入</div><h3>滑块与按钮</h3><p>用户拖动年份滑块或点击按钮，触发事件监听器并改变当前年份索引。</p></div>
+          <div class="node"><div class="no">状态</div><h3>currentIndex</h3><p>脚本以索引记录当前年份，并据此同步年份文本、文件名与图片路径。</p></div>
+          <div class="node"><div class="no">反馈</div><h3>DOM 更新</h3><p>页面不刷新，只替换图片 src、alt 与状态文本，形成连续的动态展示。</p></div>
+          <div class="node"><div class="no">播放</div><h3>定时控制</h3><p>setInterval 使年份自动推进；暂停时清除计时器，避免交互状态失控。</p></div>
+        </div>
+      </div>
+      <footer class="footer"><div class="module-tag"><span class="page">17 / 22</span>工作流程与交互实现</div><div class="footer-rule"></div><div class="brand"><span>HAI</span> Guidelines</div></footer>
+    </section>
+
+    <section class="slide">
+      <header class="header frame">
+        <div class="title-box"><div class="eyebrow">Media Input</div><h2>本地媒体上传与预览机制</h2></div>
+        <div class="explain">HTML 可通过文件选择控件读取本地媒体，并在浏览器中即时预览；该机制适合先稳定版面，再替换正式资源。</div>
+      </header>
+      <div class="content media-demo">
+        <div class="media-board">
+          <div class="media-slot">
+            <header><strong>图片预览入口</strong><span>&lt;input type="file"&gt; + &lt;img&gt;</span></header>
+            <div class="placeholder-canvas">
+              <button class="image-placeholder" type="button" id="imageUploadTrigger">
+                <span class="placeholder-label"><strong>IMAGE INPUT</strong><span>点击选择本地图片</span></span>
+              </button>
+              <input class="hidden-file-input" id="imageUploadInput" type="file" accept="image/*" />
+            </div>
+            <code>&lt;img src="assets/example.png"
+     alt="图像内容说明" /&gt;</code>
+          </div>
+          <div class="media-slot">
+            <header><strong>视频预览入口</strong><span>&lt;input type="file"&gt; + &lt;video controls&gt;</span></header>
+            <div class="placeholder-canvas">
+              <button class="video-placeholder" type="button" id="videoUploadTrigger" aria-label="视频占位">
+                <span class="placeholder-label"><strong>VIDEO INPUT</strong><span>点击选择本地视频</span></span>
+              </button>
+              <input class="hidden-file-input" id="videoUploadInput" type="file" accept="video/*" />
+            </div>
+            <code>&lt;video controls poster="cover.png"&gt;
+  &lt;source src="demo.mp4" type="video/mp4" /&gt;
+&lt;/video&gt;</code>
+          </div>
+        </div>
+        <div class="media-rules">
+          <div class="node"><div class="no">选择</div><h3>本地文件进入页面</h3><p>点击占位框触发文件选择，不需要后端上传，即可在当前浏览器会话中读取媒体。</p></div>
+          <div class="node"><div class="no">预览</div><h3>即时替换占位状态</h3><p>选择后由脚本生成临时 URL，并用真实图片或视频替换原有占位图层。</p></div>
+          <div class="node"><div class="no">说明</div><h3>结构仍需保留语义</h3><p>`alt`、标题和注释用于说明媒体内容，避免页面只剩下不可解释的视觉对象。</p></div>
+          <div class="node"><div class="no">边界</div><h3>预览不等于发布</h3><p>本地选择只在当前页面临时生效；正式分享仍需将媒体文件放入项目目录并使用相对路径。</p></div>
+        </div>
+      </div>
+      <footer class="footer"><div class="module-tag"><span class="page">18 / 22</span>工作流程与交互实现</div><div class="footer-rule"></div><div class="brand"><span>HAI</span> Guidelines</div></footer>
+    </section>
+
+    <section class="slide">
+      <header class="header frame">
+        <div class="title-box"><div class="eyebrow">Boundary & Scope</div><h2>常见误解与 HTML 优先适用场景</h2></div>
+        <div class="explain">HTML 的价值应放在具体工作阶段中理解：先排除替代性叙事，再判断其优先适用的内容任务。</div>
+      </header>
+      <div class="content split">
+        <div class="lead-block">
+          <p><strong>误解一：HTML 等同于网页设计。</strong></p>
+          <p>HTML 首先承担结构化表达功能，视觉设计应在结构稳定后由 CSS 与组件系统逐步补充。</p>
+          <p><strong>误解二：HTML 可以替换掉 MD 和 PPT。</strong></p>
+          <p>这是常见的噱头和误区。Markdown 更适合原稿组织，PPT 更适合现场表达；HTML 的优势在于中间层呈现、交互验证与跨格式衔接。</p>
+        </div>
+        <div class="quad">
+          <div class="node"><div class="no">报告页面</div><h3>在线报告、课程讲义</h3><p>需要浏览器直接打开，并且比 Markdown 更有视觉组织。</p></div>
+          <div class="node"><div class="no">交互 Demo</div><h3>小工具、仪表盘、模拟器</h3><p>需要点击、筛选、动画、数据变化，不只是静态页面。</p></div>
+          <div class="node"><div class="no">AI 协作</div><h3>可迭代的可视化成果</h3><p>支持 AI 修改局部结构、样式和脚本，降低重复制图与重排成本。</p></div>
+          <div class="node"><div class="no">跨格式输出</div><h3>转 PDF、截图、PPT 素材</h3><p>HTML 可作为发布前的统一预览层，再导出到其他格式。</p></div>
+        </div>
+      </div>
+      <footer class="footer"><div class="module-tag"><span class="page">19 / 22</span>应用边界与方法总结</div><div class="footer-rule"></div><div class="brand"><span>HAI</span> Guidelines</div></footer>
+    </section>
+
+    <section class="slide">
+      <header class="header frame">
+        <div class="title-box"><div class="eyebrow">Recommended Workflow</div><h2>以 HTML 为中间主干的内容生产流程</h2></div>
+        <div class="explain">格式选择不应被理解为单一替代关系，而应被视为内容生产不同阶段的功能分工。</div>
+      </header>
+      <div class="content flow wide-flow">
+        <div class="step"><strong>内容组织</strong><small>Markdown<br />大纲、资料、Prompt</small></div>
+        <div class="step"><strong>生成 HTML</strong><small>结构、样式<br />交互一起预览</small></div>
+        <div class="step"><strong>浏览器验证</strong><small>尺寸、排版<br />响应式、动效</small></div>
+        <div class="step"><strong>目标输出</strong><small>网页、PDF<br />PPT、截图</small></div>
+        <div class="step"><strong>稳定分发</strong><small>最终版本<br />归档与共享</small></div>
+      </div>
+      <footer class="footer"><div class="module-tag"><span class="page">20 / 22</span>应用边界与方法总结</div><div class="footer-rule"></div><div class="brand"><span>HAI</span> Guidelines</div></footer>
+    </section>
+
+    <section class="slide">
+      <header class="header frame">
+        <div class="title-box"><div class="eyebrow">Final Product</div><h2>以 HTML 为最终产品的 Web 端 Vibe Coding 流程</h2></div>
+        <div class="explain">当目标是可查询、可筛选、可交互的在线工具时，HTML 不再只是中间层，而可以成为最终交付形态。</div>
+      </header>
+      <div class="content final-product">
+        <div class="vibe-flow">
+          <div class="vibe-step"><strong>需求与数据输入</strong><small>县级分区数据、行政区划边界、字段口径与交互目标。</small></div>
+          <div class="vibe-step"><strong>AI 辅助生成页面骨架</strong><small>形成 `index.html / styles.css / app.js` 的基本结构。</small></div>
+          <div class="vibe-step"><strong>浏览器内持续迭代</strong><small>通过搜索、筛选、地图点击、缩放、导出等行为验证真实使用场景。</small></div>
+          <div class="vibe-step"><strong>HTML 作为最终产品</strong><small>交付一个可打开、可部署、可继续修改的 Web 端小工具，而非静态截图或单页汇报。</small></div>
+          <div class="core-claim">优势：HTML 将内容、数据、界面与交互放在同一可验证环境中，适合 Web 端 vibe coding 的快速试错与持续修正。</div>
+        </div>
+        <div class="web-preview">
+          <aside class="web-panel">
+            <div>
+              <div class="eyebrow">2021 COUNTY LEVEL</div>
+              <h3>设施农业分区县级对照</h3>
+            </div>
+            <div class="mock-search">搜索县、市、省：寿光 / 潍坊 / 山东</div>
+            <div class="mock-chips">
+              <span class="mock-chip active">全部分区</span>
+              <span class="mock-chip">都市近郊型</span>
+              <span class="mock-chip">平原规模型</span>
+              <span class="mock-chip">山地特色型</span>
+            </div>
+            <div class="mock-list">
+              <div class="mock-row"><strong>山东省 / 潍坊市 / 寿光市</strong><span>设施农业重点县域</span></div>
+              <div class="mock-row"><strong>江苏省 / 盐城市 / 东台市</strong><span>沿海设施农业区</span></div>
+              <div class="mock-row"><strong>河北省 / 唐山市 / 乐亭县</strong><span>环渤海生产区</span></div>
+            </div>
+          </aside>
+          <section class="web-map">
+            <div class="web-toolbar">
+              <span>搜索 / 分区筛选 / 地图点击 / 导出 Excel</span>
+              <a href="file:///G:/浙大/本子/设施农业分区县级对照_html/county-map-standalone.html" target="_blank" rel="noopener">打开示例</a>
+            </div>
+            <div class="mock-map-canvas">
+              <svg viewBox="0 0 520 360" role="img" aria-label="设施农业分区县级对照示意图">
+                <path d="M91 118 L160 82 L236 104 L283 74 L356 100 L438 92 L469 164 L426 229 L452 291 L360 312 L294 274 L220 304 L152 260 L74 248 L54 181 Z" fill="#f4f7ef" stroke="#8aa096" stroke-width="3" />
+                <path d="M91 118 L166 153 L160 82" fill="#c8dfd2" stroke="#fff" stroke-width="2" />
+                <path d="M166 153 L236 104 L283 74 L296 155 L238 192 Z" fill="#9fc6ba" stroke="#fff" stroke-width="2" />
+                <path d="M296 155 L356 100 L438 92 L417 171 L351 202 Z" fill="#d8c7a7" stroke="#fff" stroke-width="2" />
+                <path d="M74 248 L166 153 L238 192 L220 304 L152 260 Z" fill="#b8d7c5" stroke="#fff" stroke-width="2" />
+                <path d="M238 192 L296 155 L351 202 L294 274 L220 304 Z" fill="#6fa895" stroke="#fff" stroke-width="2" />
+                <path d="M351 202 L417 171 L469 164 L426 229 L452 291 L360 312 L294 274 Z" fill="#c78f66" stroke="#fff" stroke-width="2" />
+                <circle cx="238" cy="192" r="8" fill="#0f6e78" />
+                <text x="258" y="198" fill="#1f2a2e" font-size="18" font-family="Microsoft YaHei">selected county</text>
+              </svg>
+            </div>
+          </section>
+        </div>
+      </div>
+      <footer class="footer"><div class="module-tag"><span class="page">21 / 22</span>应用边界与方法总结</div><div class="footer-rule"></div><div class="brand"><span>HAI</span> Guidelines</div></footer>
+    </section>
+
+    <section class="slide">
+      <header class="header frame">
+        <div class="title-box"><div class="eyebrow">Publication</div><h2>HTML 发布方式</h2></div>
+        <div class="explain">HTML 成果的交付不止于“打开一个文件”，还包括资源打包、静态托管、服务器部署与版本维护等不同层级。</div>
+      </header>
+      <div class="content publish-map">
+        <div class="publish-card">
+          <div class="no">01 LOCAL FILE</div>
+          <h3>本地打开</h3>
+          <p>直接通过浏览器打开 `.html` 文件，适合课堂演示、个人预览和离线展示。</p>
+          <ul><li>注意图片、视频、脚本路径是否可访问。</li></ul>
+        </div>
+        <div class="publish-card">
+          <div class="no">02 PACKAGE</div>
+          <h3>文件夹打包</h3>
+          <p>将 HTML、CSS、JS、图片、视频和数据文件放入同一目录结构后整体分享。</p>
+          <ul><li>优先使用相对路径，减少跨电脑失效。</li></ul>
+        </div>
+        <div class="publish-card">
+          <div class="no">03 STATIC HOSTING</div>
+          <h3>静态托管</h3>
+          <p>发布到 GitHub Pages、学校服务器或静态网站平台，形成可访问链接。</p>
+          <ul><li>适合报告页面、课程讲义和展示型工具。</li></ul>
+        </div>
+        <div class="publish-card">
+          <div class="no">04 WEB APP</div>
+          <h3>服务器部署</h3>
+          <p>当页面需要接口、数据库、权限或多人协作时，HTML 进入完整 Web 应用体系。</p>
+          <ul><li>需要同时管理前端、后端与数据安全。</li></ul>
+        </div>
+      </div>
+      <footer class="footer"><div class="module-tag"><span class="page">22 / 22</span>应用边界与方法总结</div><div class="footer-rule"></div><div class="brand"><span>HAI</span> Guidelines</div></footer>
+    </section>
+  </main>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const progress = document.querySelector(".progress");
+
+    function clampIndex(index) {
+      return Math.max(0, Math.min(slides.length - 1, index));
+    }
+
+    function currentIndex() {
+      const viewportMiddle = window.scrollY + window.innerHeight / 2;
+      let nearest = 0;
+      let distance = Infinity;
+      slides.forEach((slide, index) => {
+        const middle = slide.offsetTop + slide.offsetHeight / 2;
+        const delta = Math.abs(middle - viewportMiddle);
+        if (delta < distance) {
+          distance = delta;
+          nearest = index;
+        }
+      });
+      return nearest;
+    }
+
+    function goTo(index) {
+      slides[clampIndex(index)].scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function updateProgress() {
+      const index = currentIndex();
+      const percent = slides.length <= 1 ? 100 : (index / (slides.length - 1)) * 100;
+      progress.style.setProperty("--progress", `${percent}%`);
+    }
+
+    window.addEventListener("keydown", event => {
+      if (["ArrowDown", "PageDown", " "].includes(event.key)) {
+        event.preventDefault();
+        goTo(currentIndex() + 1);
+      }
+      if (["ArrowUp", "PageUp"].includes(event.key)) {
+        event.preventDefault();
+        goTo(currentIndex() - 1);
+      }
+      if (event.key === "Home") {
+        event.preventDefault();
+        goTo(0);
+      }
+      if (event.key === "End") {
+        event.preventDefault();
+        goTo(slides.length - 1);
+      }
+    });
+
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("resize", updateProgress);
+
+    const demoStates = {
+      html: {
+        title: "HTML",
+        text: "结构层：粮食供给网络沙盘的节点与指标容器。",
+        code: `<div class="container">
+    <div class="network">
+        <h2>粮食供给网络节点沙盘</h2>
+        <p class="subtitle">点击进行网络攻击逻辑推演 (动态模拟系统脆弱性)</p>
+        
+        <div class="node" id="node-1" data-capacity="30">
+            <span>核心输出源 A (流转量: 30)</span>
+            <button class="attack-btn" onclick="attackNode('node-1', 30, this)">切断节点</button>
+        </div>
+        <div class="node" id="node-2" data-capacity="45">
+            <span>核心输出源 B (流转量: 45)</span>
+            <button class="attack-btn" onclick="attackNode('node-2', 45, this)">切断节点</button>
+        </div>
+        <div class="node" id="node-3" data-capacity="25">
+            <span>次级输出源 C (流转量: 25)</span>
+            <button class="attack-btn" onclick="attackNode('node-3', 25, this)">切断节点</button>
+        </div>
+        
+        <button class="reset-btn" onclick="resetSystem()">? 恢复系统初始状态</button>
+    </div>
+
+    <div class="dashboard">
+        <div class="metric">
+            网络总供给量 (T)
+            <span class="value" id="total-supply">100</span>
+            <div class="progress-bg">
+                <div class="progress-fill" id="supply-bar"></div>
+            </div>
+        </div>
+        <div class="metric">
+            系统运行状态
+            <span class="value status-text" id="system-status">稳态运转</span>
+        </div>
+    </div>
+</div>`
+      },
+      css: {
+        title: "CSS",
+        text: "表现层：定义暗色网格、节点状态、按钮与指标面板。",
+        code: `body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background-color: #121212; 
+    background-image: linear-gradient(#1e1e1e 1px, transparent 1px), linear-gradient(90deg, #1e1e1e 1px, transparent 1px);
+    background-size: 20px 20px;
+    color: #e0e0e0; 
+    padding: 40px; 
+    display: flex;
+    justify-content: center;
+}
+
+.container { 
+    display: flex; 
+    gap: 30px; 
+    width: 100%;
+    max-width: 900px; 
+    background: rgba(37, 37, 38, 0.95); 
+    padding: 35px; 
+    border-radius: 12px; 
+    border: 1px solid #333;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.network { flex: 1; }
+h2 { margin-top: 0; color: #fff; letter-spacing: 1px; }
+.subtitle { color: #888; margin-bottom: 25px; font-size: 0.9rem; }
+
+.node { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    background: #2d2d2d; 
+    padding: 16px 20px; 
+    margin-bottom: 12px; 
+    border-radius: 8px; 
+    border-left: 6px solid #4caf50; 
+    transition: all 0.4s ease; 
+}
+
+.node.attacked { 
+    border-left-color: #f44336; 
+    background: #2a1616;
+    color: #ff8a80;
+    text-decoration: line-through; 
+    box-shadow: inset 0 0 15px rgba(244, 67, 54, 0.1);
+}
+
+button { 
+    background: #007acc; 
+    color: white; 
+    border: none; 
+    padding: 10px 18px; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    font-weight: bold;
+    transition: all 0.2s; 
+}
+
+button:hover { background: #0098ff; transform: translateY(-1px); }
+button.attack-btn { background: #d32f2f; }
+button.attack-btn:hover { background: #f44336; box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3); }
+button:disabled { background: #444; color: #888; cursor: not-allowed; box-shadow: none; transform: none; }
+.reset-btn { margin-top: 25px; background: #555; }
+.reset-btn:hover { background: #666; }
+
+.dashboard { 
+    width: 280px; 
+    background: #1e1e1e; 
+    padding: 25px; 
+    border-radius: 10px; 
+    border: 1px solid #333; 
+}
+
+.metric { font-size: 1.1rem; margin-bottom: 30px; color: #aaa; }
+.value { font-size: 2.8rem; color: #4caf50; font-weight: 800; display: block; margin-top: 8px; transition: color 0.4s; }
+.status-text { font-size: 1.6rem; }
+
+.value.danger { color: #f44336; text-shadow: 0 0 10px rgba(244, 67, 54, 0.4); }
+.value.warning { color: #ff9800; }
+
+.progress-bg {
+    width: 100%;
+    height: 8px;
+    background: #333;
+    border-radius: 4px;
+    margin-top: 15px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 100%;
+    background: #4caf50;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.4s;
+}`
+      },
+      js: {
+        title: "JavaScript",
+        text: "行为层：节点切断、状态阈值判断、供给量和进度条更新。",
+        code: `let totalSupply = 100;
+const MAX_SUPPLY = 100;
+
+function attackNode(nodeId, capacity, btn) {
+    document.getElementById(nodeId).classList.add('attacked');
+    btn.disabled = true;
+    btn.innerText = "节点瘫痪";
+
+    totalSupply -= capacity;
+    
+    const supplyEl = document.getElementById('total-supply');
+    const statusEl = document.getElementById('system-status');
+    const barEl = document.getElementById('supply-bar');
+    
+    supplyEl.innerText = totalSupply;
+    barEl.style.width = (totalSupply / MAX_SUPPLY * 100) + '%';
+
+    if (totalSupply <= 30) {
+        supplyEl.className = 'value danger';
+        statusEl.className = 'value status-text danger';
+        statusEl.innerText = "网络面临崩溃";
+        barEl.style.background = '#f44336';
+    } else if (totalSupply <= 70) {
+        supplyEl.className = 'value warning';
+        statusEl.className = 'value status-text warning';
+        statusEl.innerText = "扰动但可控";
+        barEl.style.background = '#ff9800';
+    }
+}
+
+function resetSystem() {
+    totalSupply = 100;
+    
+    const supplyEl = document.getElementById('total-supply');
+    const barEl = document.getElementById('supply-bar');
+    supplyEl.innerText = totalSupply;
+    supplyEl.className = 'value';
+    barEl.style.width = '100%';
+    barEl.style.background = '#4caf50';
+    
+    const statusEl = document.getElementById('system-status');
+    statusEl.innerText = "稳态运转";
+    statusEl.className = 'value status-text';
+    statusEl.style.color = "#4caf50";
+
+    document.querySelectorAll('.node').forEach(node => node.classList.remove('attacked'));
+    document.querySelectorAll('.attack-btn').forEach(btn => {
+        btn.disabled = false;
+        btn.innerText = "切断节点";
+    });
+}`
+      }
+    };
+
+    const demoTitle = document.querySelector("#demoTitle");
+    const demoText = document.querySelector("#demoText");
+    const layerCode = document.querySelector("#layerCode");
+    const copyLayerCode = document.querySelector("#copyLayerCode");
+    const demoButtons = Array.from(document.querySelectorAll("[data-demo]"));
+    let activeDemo = "html";
+
+    function setLayerCode(type) {
+      const state = demoStates[type];
+      activeDemo = type;
+      demoTitle.textContent = state.title;
+      demoText.textContent = state.text;
+      layerCode.textContent = state.code;
+      demoButtons.forEach(item => item.classList.toggle("active", item.dataset.demo === type));
+      copyLayerCode.textContent = "复制代码";
+    }
+
+    demoButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        setLayerCode(button.dataset.demo);
+      });
+    });
+
+    copyLayerCode.addEventListener("click", async () => {
+      const code = demoStates[activeDemo].code;
+      try {
+        await navigator.clipboard.writeText(code);
+      } catch (error) {
+        const textarea = document.createElement("textarea");
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+      }
+      copyLayerCode.textContent = "已复制";
+    });
+
+    setLayerCode("html");
+
+    const agriYears = Array.from({ length: 10 }, (_, index) => 2013 + index);
+    const agriBasePath = "file:///G:/浙大/设施农业/重新设计/原始数据/设施农业县级空间制图/年度设施农业占地面积_五等分_单年图/";
+    const agriImageNames = agriYears.map((year) => `设施农业占地面积_${year}_五等分.png`);
+    const agriImage = document.getElementById("agriMapImage");
+    const agriSlider = document.getElementById("agriYearSlider");
+    const agriYearLabel = document.getElementById("agriYearLabel");
+    const agriFileLabel = document.getElementById("agriFileLabel");
+    const agriPrevBtn = document.getElementById("agriPrevBtn");
+    const agriPlayBtn = document.getElementById("agriPlayBtn");
+    let agriIndex = 0;
+    let agriTimer = null;
+
+    function setAgriYear(index) {
+      if (!agriImage || !agriSlider || !agriYearLabel || !agriFileLabel) return;
+      agriIndex = (index + agriYears.length) % agriYears.length;
+      const year = agriYears[agriIndex];
+      const imageName = agriImageNames[agriIndex];
+
+      agriSlider.value = agriIndex;
+      agriYearLabel.textContent = year;
+      agriFileLabel.textContent = imageName;
+      agriImage.classList.add("is-changing");
+      window.setTimeout(() => {
+        agriImage.src = agriBasePath + imageName;
+        agriImage.alt = `${year} 年设施农业占地面积五等分县级空间制图`;
+      }, 70);
+    }
+
+    function stopAgriPlayback() {
+      if (agriTimer) {
+        window.clearInterval(agriTimer);
+        agriTimer = null;
+      }
+      if (agriPlayBtn) {
+        agriPlayBtn.textContent = "▶";
+        agriPlayBtn.setAttribute("aria-label", "播放");
+      }
+    }
+
+    function startAgriPlayback() {
+      stopAgriPlayback();
+      if (!agriPlayBtn) return;
+      agriPlayBtn.textContent = "Ⅱ";
+      agriPlayBtn.setAttribute("aria-label", "暂停");
+      agriTimer = window.setInterval(() => setAgriYear(agriIndex + 1), 1200);
+    }
+
+    if (agriSlider && agriPrevBtn && agriPlayBtn && agriImage) {
+      agriImageNames.forEach((name) => {
+        const preload = new Image();
+        preload.src = agriBasePath + name;
+      });
+      agriSlider.addEventListener("input", (event) => {
+        stopAgriPlayback();
+        setAgriYear(Number(event.target.value));
+      });
+      agriPrevBtn.addEventListener("click", () => {
+        stopAgriPlayback();
+        setAgriYear(agriIndex - 1);
+      });
+      agriPlayBtn.addEventListener("click", () => {
+        agriTimer ? stopAgriPlayback() : startAgriPlayback();
+      });
+      agriImage.addEventListener("load", () => {
+        agriImage.classList.remove("is-changing");
+      });
+      setAgriYear(0);
+    }
+
+    const imageUploadTrigger = document.getElementById("imageUploadTrigger");
+    const imageUploadInput = document.getElementById("imageUploadInput");
+    const videoUploadTrigger = document.getElementById("videoUploadTrigger");
+    const videoUploadInput = document.getElementById("videoUploadInput");
+
+    function showLocalImage(file) {
+      if (!file || !imageUploadTrigger) return;
+      const url = URL.createObjectURL(file);
+      imageUploadTrigger.innerHTML = "";
+      imageUploadTrigger.classList.add("has-preview");
+      const image = document.createElement("img");
+      image.className = "media-preview";
+      image.src = url;
+      image.alt = file.name;
+      imageUploadTrigger.appendChild(image);
+    }
+
+    function showLocalVideo(file) {
+      if (!file || !videoUploadTrigger) return;
+      const url = URL.createObjectURL(file);
+      videoUploadTrigger.innerHTML = "";
+      videoUploadTrigger.classList.add("has-preview");
+      const video = document.createElement("video");
+      video.className = "media-preview";
+      video.src = url;
+      video.controls = true;
+      video.muted = true;
+      video.addEventListener("click", (event) => event.stopPropagation());
+      videoUploadTrigger.appendChild(video);
+    }
+
+    if (imageUploadTrigger && imageUploadInput) {
+      imageUploadTrigger.addEventListener("click", () => imageUploadInput.click());
+      imageUploadInput.addEventListener("change", (event) => {
+        showLocalImage(event.target.files[0]);
+      });
+    }
+
+    if (videoUploadTrigger && videoUploadInput) {
+      videoUploadTrigger.addEventListener("click", () => videoUploadInput.click());
+      videoUploadInput.addEventListener("change", (event) => {
+        showLocalVideo(event.target.files[0]);
+      });
+    }
+
+    updateProgress();
+  </script>
+</body>
+</html>
+
